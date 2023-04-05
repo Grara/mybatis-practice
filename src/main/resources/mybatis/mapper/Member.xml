@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mybatistraining.MemberDAO">
+
+    <select id="findAllMembers" resultType="com.mybatistraining.Member">
+
+        SELECT * FROM member
+
+    </select>
+    
+    <select id="findByName" resultType="com.mybatistraining.Member">
+        
+        SELECT * FROM member
+        WHERE 1=1
+        <if test="name != null">
+            AND name like #{name}
+        </if>
+        
+    </select>
+    
+    <select id="findAllMembersJoinItems" resultMap="MemberItemResultMap">
+
+        SELECT m.member_id, m.name as member_name, age,
+               item_id, i.name as item_name, power
+        FROM member m
+        LEFT JOIN item i ON m.member_id = i.member_id
+
+    </select>
+
+    <resultMap id="MemberItemResultMap" type="com.mybatistraining.Member">
+        <id column="member_id" property="id" />
+        <result column="member_name" property="name"/>
+        <result column="age" property="age"/>
+        <collection property="items" ofType="com.mybatistraining.Item">
+            <id column="item_id" property="id"/>
+            <result column="item_name" property="name"/>
+            <result column="power" property="power"/>
+        </collection>
+    </resultMap>
+
+</mapper>
